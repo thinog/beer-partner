@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: dotnetcore3.1
+    Timeout: 30
+
+Resources:
+  ApiGatewayBeerPartner:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: /v1
+
+  ApiPartnerCreate:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Create
+      Handler: BeerPartner.Lambda.Partner.Create::BeerPartner.Lambda.Partner.Create.Function::FunctionHandler      
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayBeerPartner
+            Path: /partner
+            Method: POST
+
+  ApiPartnerGet:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Get
+      Handler: BeerPartner.Lambda.Partner.Get::BeerPartner.Lambda.Partner.Get.Function::FunctionHandler      
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayBeerPartner
+            Path: /partner/{id}
+            Method: GET
+
+  ApiPartnerSearch:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Search
+      Handler: BeerPartner.Lambda.Partner.Search::BeerPartner.Lambda.Partner.Search.Function::FunctionHandler      
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayBeerPartner
+            Path: /partner/{latitude}/{longitude}
+            Method: GET

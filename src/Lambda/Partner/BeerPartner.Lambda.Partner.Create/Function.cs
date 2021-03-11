@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.Lambda.APIGatewayEvents;
 
 using Amazon.Lambda.Core;
 
@@ -12,16 +13,23 @@ namespace BeerPartner.Lambda.Partner.Create
 {
     public class Function
     {
-        
         /// <summary>
         /// A simple function that takes a string and does a ToUpper
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string FunctionHandler(string input, ILambdaContext context)
+        public APIGatewayProxyResponse FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return input?.ToUpper();
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 200,
+                Body = "{\"result\":\"Lambda Create :)\"}",
+                Headers = new Dictionary<string, string>
+                {
+                    {"Content-Type", "application/json"}
+                }
+            };
         }
     }
 }

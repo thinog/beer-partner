@@ -1,0 +1,24 @@
+# stack-beer-partner-api-partner-create
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Partner Create Lambda
+
+Parameters:
+  APIGateway:
+    Type: String
+    Default: stack-beer-partner-api-gateway
+  LambdaRole:
+    Type: String
+    Default: stack-beer-partner-iam
+
+Resources:
+  APIMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      RestApiId: !Sub '${APIGateway}-APIGateway'
+      ResourceId: !Sub '${APIGateway}-APIGatewayResourcePartner'
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST

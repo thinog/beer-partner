@@ -1,0 +1,12 @@
+# stack-beer-partner-api-partner-get
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Partner Get Lambda
+
+Parameters:
+  APIGateway:
+    Type: String
+    Default: stack-beer-partner-api-gateway
+  LambdaRole:
+    Type: String
+    Default: stack-beer-partner-iam
