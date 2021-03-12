@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "stack-beer-partner"
+s3_bucket = "beer-partner-sam"
+s3_prefix = "stack-beer-partner"
+region = "us-east-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides = "Stage=\"prd\""

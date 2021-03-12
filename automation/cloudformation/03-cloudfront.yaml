@@ -1,8 +1,0 @@
-# stack-beer-partner-cloudfront
-
-AWSTemplateFormatVersion: 2010-09-09
-Description: CloudFront
-Parameters:
-  APIGateway:
-    Type: String
-    Default: stack-beer-partner-api-gateway

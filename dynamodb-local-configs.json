@@ -1,0 +1,10 @@
+{
+    "TableName": "dev_beer_partner",
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+      { "AttributeName": "Id", "KeyType": "HASH" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "Id", "AttributeType": "N" }
+    ]
+}

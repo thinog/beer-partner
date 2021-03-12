@@ -1,14 +1,27 @@
 #!/bin/bash
 
-if ! command -v dotnet &> /dev/null
+if command -v sam.cmd &> /dev/null
+then
+    sam="sam.cmd"
+elif command -v sam &> /dev/null
+then
+    sam="sam"
+else
+    echo "SAM is missing!"
+    echo "https://aws.amazon.com/serverless/sam/"
+    exit
+fi
+
+if ! command -v aws &> /dev/null
 then
     echo "AWS CLI is missing!"
     echo "https://aws.amazon.com/cli/"
     exit
 fi
 
-dotnet lambda deploy-function --project-location ./src/Lambda/Partner/BeerPartner.Lambda.Partner.Create
+aws s3api create-bucket --bucket beer-partner-sam --acl private
 
-dotnet lambda deploy-function --project-location ./src/Lambda/Partner/BeerPartner.Lambda.Partner.Get
+cd automation/sam
 
-dotnet lambda deploy-function --project-location ./src/Lambda/Partner/BeerPartner.Lambda.Partner.Search
+$sam build && \
+$sam deploy

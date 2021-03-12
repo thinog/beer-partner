@@ -1,22 +1,82 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prd
+
 Globals:
   Function:
     Runtime: dotnetcore3.1
+    MemorySize: 128
     Timeout: 30
 
 Resources:
+  DynamoBeerPartnerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${Stage}_beer_partner'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - 
+          AttributeName: "Id"
+          AttributeType: "S"
+      KeySchema:
+        - 
+          AttributeName: "Id"
+          KeyType: "HASH"
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: role-beer-partner-lambda
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+            - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      Policies:
+        - PolicyName: policy-lambda-dynamodb
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Effect: Allow
+                Action: 
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:BatchWriteItem
+                Resource: 
+                  - !GetAtt DynamoBeerPartnerTable.Arn   
+
   ApiGatewayBeerPartner:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: /v1
+      StageName: !Ref Stage
+      EndpointConfiguration:
+        Type: EDGE
+      Cors:
+        AllowMethods: "'POST, GET'"
+        AllowOrigin: "'*'"
 
   ApiPartnerCreate:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Create
-      Handler: BeerPartner.Lambda.Partner.Create::BeerPartner.Lambda.Partner.Create.Function::FunctionHandler      
+      Handler: BeerPartner.Lambda.Partner.Create::BeerPartner.Lambda.Partner.Create.Function::FunctionHandler
+      Role: !GetAtt LambdaRole.Arn
       Events:
         HttpPost:
           Type: Api
@@ -29,7 +89,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Get
-      Handler: BeerPartner.Lambda.Partner.Get::BeerPartner.Lambda.Partner.Get.Function::FunctionHandler      
+      Handler: BeerPartner.Lambda.Partner.Get::BeerPartner.Lambda.Partner.Get.Function::FunctionHandler
+      Role: !GetAtt LambdaRole.Arn
       Events:
         HttpPost:
           Type: Api
@@ -42,11 +103,31 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Search
-      Handler: BeerPartner.Lambda.Partner.Search::BeerPartner.Lambda.Partner.Search.Function::FunctionHandler      
+      Handler: BeerPartner.Lambda.Partner.Search::BeerPartner.Lambda.Partner.Search.Function::FunctionHandler
+      Role: !GetAtt LambdaRole.Arn
       Events:
         HttpPost:
           Type: Api
           Properties:
             RestApiId: !Ref ApiGatewayBeerPartner
-            Path: /partner/{latitude}/{longitude}
+            Path: /partner/search/{latitude}/{longitude}
             Method: GET
+
+Outputs:
+  APIPartnerCreate:
+    Description: Partner Create URL
+    Value: !Sub 'https://${ApiGatewayBeerPartner}.execute-api.us-east-1.amazonaws.com/${Stage}/partner'
+    Export:
+      Name: !Sub '${AWS::StackName}-APIPartnerCreateUrl'
+
+  APIPartnerGet:
+    Description: Partner Get URL
+    Value: !Sub 'https://${ApiGatewayBeerPartner}.execute-api.us-east-1.amazonaws.com/${Stage}/partner/{id}'
+    Export:
+      Name: !Sub '${AWS::StackName}-APIPartnerGetUrl'
+
+  APIPartnerSearch:
+    Description: Partner Search URL
+    Value: !Sub 'https://${ApiGatewayBeerPartner}.execute-api.us-east-1.amazonaws.com/${Stage}/partner/search/{latitude}/{longitude}'
+    Export:
+      Name: !Sub '${AWS::StackName}-APIPartnerSearchUrl'

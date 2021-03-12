@@ -7,16 +7,6 @@ then
     exit
 fi
 
-aws cloudformation delete-stack --stack-name stack-beer-partner-api-gateway-stages
+aws cloudformation delete-stack --stack-name stack-beer-partner
 
-aws cloudformation delete-stack --stack-name stack-beer-partner-api-partner-create
-
-aws cloudformation delete-stack --stack-name stack-beer-partner-api-partner-get
-
-aws cloudformation delete-stack --stack-name stack-beer-partner-api-partner-search
-
-aws cloudformation delete-stack --stack-name stack-beer-partner-cloudfront
-
-aws cloudformation delete-stack --stack-name stack-beer-partner-api-gateway
-
-aws cloudformation delete-stack --stack-name stack-beer-partner-iam
+aws s3 rb s3://beer-partner-sam --force

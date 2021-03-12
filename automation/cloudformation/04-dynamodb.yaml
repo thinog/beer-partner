@@ -1,4 +1,0 @@
-# stack-beer-partner-dynamodb
-
-AWSTemplateFormatVersion: 2010-09-09
-Description: DynamoDB
