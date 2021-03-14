@@ -2,8 +2,9 @@ using Xunit;
 using BeerPartner.Domain.Entities;
 using BeerPartner.Domain.Interfaces;
 using System;
+using BeerPartner.Domain.ValueObjects.GeoJSON;
 
-namespace BeerPartnerUnitTests.Domain
+namespace BeerPartnerUnitTests.Domain.Entities
 {
     public class PartnerTest
     {
@@ -15,7 +16,9 @@ namespace BeerPartnerUnitTests.Domain
             {
                 Id = Guid.NewGuid(),
                 TradingName = "Adega do Zé",
-                OwnerName = "José"
+                OwnerName = "José",
+                CoverageArea = new MultiPolygon(),
+                Address = new Point()
             };
 
             // Act
@@ -33,7 +36,9 @@ namespace BeerPartnerUnitTests.Domain
             {
                 Id = Guid.NewGuid(),
                 TradingName = "Adega do Zé",
-                OwnerName = "José"
+                OwnerName = "",
+                CoverageArea = new MultiPolygon(),
+                Address = new Point()
             };
 
             // Act

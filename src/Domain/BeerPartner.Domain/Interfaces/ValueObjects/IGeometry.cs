@@ -1,13 +1,14 @@
-using System.Collections.Generic;
 using BeerPartner.Domain.Enums;
 
 namespace BeerPartner.Domain.Interfaces.ValueObjects
 {
     // https://tools.ietf.org/html/rfc7946#section-3.1
-    public interface IGeometry<T>
+    public interface IGeometry<TCoordinates> : IValidatable
     {
         GeometryType Type { get; }
 
-        IEnumerable<T> Coordinates { get; set; }
+        TCoordinates Coordinates { get; set; }
+
+        bool IsRoot { get; set; }
     }
 }

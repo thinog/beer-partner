@@ -24,7 +24,11 @@ namespace BeerPartner.Domain.Entities
 
         public bool Validate()
         {
-            return true;
+            return 
+                !string.IsNullOrWhiteSpace(TradingName)
+                && !string.IsNullOrWhiteSpace(OwnerName)
+                && CoverageArea.Validate()
+                && Address.Validate();
         }
     }
 }
