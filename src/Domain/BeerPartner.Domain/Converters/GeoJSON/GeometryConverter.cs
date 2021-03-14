@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BeerPartner.Domain.Enums;
@@ -12,17 +13,15 @@ namespace BeerPartner.Domain.Converters.GeoJSON
 
         public override TGeometry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var tokenType = reader.TokenType;
-
-            if(tokenType != JsonTokenType.StartObject && tokenType != JsonTokenType.StartArray)
+            TGeometry geometry = reader.TokenType switch
+            {
+                JsonTokenType.StartObject => ReadObject(ref reader, options),
+                JsonTokenType.StartArray => ReadArray(ref reader, options),
+                _ => default
+            };
+            
+            if(geometry is null)
                 throw new JsonException("Invalid JSON body.");
-
-            using var jsonDocument = JsonDocument.ParseValue(ref reader);
-            TGeometry geometry;
-
-            geometry = tokenType == JsonTokenType.StartObject
-                ? ReadObject(jsonDocument)
-                : ReadArray(jsonDocument);
 
             return geometry;
         }
@@ -32,9 +31,11 @@ namespace BeerPartner.Domain.Converters.GeoJSON
             throw new NotImplementedException();
         }
 
-        private TGeometry ReadObject(JsonDocument jsonDocument)
+        private TGeometry ReadObject(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            TGeometry geometry = new TGeometry();
+            var jsonDocument = JsonDocument.ParseValue(ref reader);
+
+            var geometry = new TGeometry();
             string typePropertyName = geometry.GetJsonPropertyName(o => o.Type);
             string coordinatesPropertyName = geometry.GetJsonPropertyName(o => o.Coordinates);
 
@@ -54,7 +55,7 @@ namespace BeerPartner.Domain.Converters.GeoJSON
 
                 if(prop.Name.Equals(coordinatesPropertyName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(prop.Value.ToString());
+                    geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(prop.Value.GetRawText(), options);
                     continue;
                 }
             }
@@ -62,9 +63,13 @@ namespace BeerPartner.Domain.Converters.GeoJSON
             return geometry;
         }
 
-        private TGeometry ReadArray(JsonDocument jsonDocument)
+        private TGeometry ReadArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            TGeometry geometry = new TGeometry();
+            var jsonDocument = JsonDocument.ParseValue(ref reader);
+
+            var geometry = new TGeometry();
+
+            geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(jsonDocument.RootElement.GetRawText(), options);
 
             return geometry;
         }

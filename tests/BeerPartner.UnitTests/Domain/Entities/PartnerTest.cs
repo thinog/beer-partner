@@ -3,6 +3,7 @@ using BeerPartner.Domain.Entities;
 using BeerPartner.Domain.Interfaces;
 using System;
 using BeerPartner.Domain.ValueObjects.GeoJSON;
+using System.Collections.Generic;
 
 namespace BeerPartnerUnitTests.Domain.Entities
 {
@@ -14,11 +15,42 @@ namespace BeerPartnerUnitTests.Domain.Entities
             // Arrange
             IValidatable partner = new Partner 
             {
-                Id = Guid.NewGuid(),
                 TradingName = "Adega do Zé",
                 OwnerName = "José",
-                CoverageArea = new MultiPolygon(),
-                Address = new Point()
+                CoverageArea = new MultiPolygon
+                {
+                    Coordinates = new List<Polygon>
+                    {
+                        new Polygon
+                        {
+                            Coordinates = new List<LineString>
+                            {
+                                new LineString
+                                {
+                                    Coordinates = new List<Point>
+                                    {
+                                        new Point
+                                        {
+                                            Coordinates = new Position
+                                            {
+                                                Altitude = 0,
+                                                Longitude = 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                Address = new Point
+                {
+                    Coordinates = new Position
+                    {
+                        Altitude = 0,
+                        Longitude = 0
+                    }
+                }
             };
 
             // Act
