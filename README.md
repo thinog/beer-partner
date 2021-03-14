@@ -1,12 +1,13 @@
-# beer-partner
+# Beer Partner :beers:
 Encontre a loja mais próxima para comprar sua cerveja gelada!
 
 Pré-requisitos:
-- [.NET Core SDK (>= 3.1)](https://dotnet.microsoft.com/download)
-- [Docker](https://www.docker.com)
-- [AWS CLI](https://aws.amazon.com/cli/)
-- [AWS SAM (Serverless Application Model)](https://aws.amazon.com/pt/serverless/sam/)
+- [.NET Core SDK (>= 3.1)][dotnet]
+- [Docker][docker]
+- [AWS CLI][aws-cli] (instalado e com perfil default [configurado][aws-cli-configuration])
+- [AWS SAM (Serverless Application Model)][aws-sam]
 
+## Comandos
 Executar testes unitários e verificar coverage:
 ```bash
 dotnet test -p:CollectCoverage=true
@@ -52,3 +53,10 @@ Destruir stack na AWS:
 - [x] Criar implementação de GeoJSON
 - [ ] Testes unitários
 - [ ] (Opcional) Container de SonarQube local para analisar código
+
+
+[dotnet]: https://dotnet.microsoft.com/download
+[docker]: https://www.docker.com
+[aws-cli]: https://aws.amazon.com/cli/
+[aws-sam]: https://aws.amazon.com/pt/serverless/sam/
+[aws-cli-configuration]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-methods
