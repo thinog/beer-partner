@@ -64,6 +64,7 @@ Resources:
   ApiGatewayBeerPartner:
     Type: AWS::Serverless::Api
     Properties:
+      Name: api-beer-partner
       StageName: !Ref Stage
       EndpointConfiguration:
         Type: EDGE
@@ -74,6 +75,7 @@ Resources:
   ApiPartnerCreate:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: lambda-beer-partner-create
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Create
       Handler: BeerPartner.Lambda.Partner.Create::BeerPartner.Lambda.Partner.Create.Function::FunctionHandler
       Role: !GetAtt LambdaRole.Arn
@@ -88,6 +90,7 @@ Resources:
   ApiPartnerGet:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: lambda-beer-partner-get
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Get
       Handler: BeerPartner.Lambda.Partner.Get::BeerPartner.Lambda.Partner.Get.Function::FunctionHandler
       Role: !GetAtt LambdaRole.Arn
@@ -102,6 +105,7 @@ Resources:
   ApiPartnerSearch:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: lambda-beer-partner-search
       CodeUri: ../../src/Lambda/Partner/BeerPartner.Lambda.Partner.Search
       Handler: BeerPartner.Lambda.Partner.Search::BeerPartner.Lambda.Partner.Search.Function::FunctionHandler
       Role: !GetAtt LambdaRole.Arn
