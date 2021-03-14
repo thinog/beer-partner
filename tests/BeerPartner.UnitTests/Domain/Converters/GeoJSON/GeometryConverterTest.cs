@@ -4,10 +4,10 @@ using System.Text.Json;
 using BeerPartner.Domain.Converters.GeoJSON;
 using BeerPartner.Domain.ValueObjects.GeoJSON;
 using Xunit;
-using Moq;
 using System.Threading;
 using System.Linq;
 using BeerPartner.Domain.Enums;
+using System.Collections.Generic;
 
 namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
 {
@@ -19,6 +19,7 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
+        #region Read
         [Fact]
         public void Should_ConvertJsonToPointObject_When_ReceiveAValidPointGeoJson()
         {
@@ -165,5 +166,132 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             // Assert
             Assert.Equal("Invalid JSON body.", exception.Message);
         }
+        #endregion
+
+        #region Write
+        [Fact]
+        public void Should_ConvertPointObjectToJson_When_ReceiveAValidPointObject()
+        {
+            // Arrange
+            Point point = new Point
+            {
+                IsRoot = true,
+                Coordinates = new Position
+                {
+                    Longitude = 123.123,
+                    Latitude = 10
+                }
+            };
+            
+            // Act
+            string json = JsonSerializer.Serialize(point);
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(json));
+            Assert.Equal("{\"type\":\"Point\",\"coordinates\":[123.123,10]}", json);
+        }
+        
+        [Fact]
+        public void Should_ConvertMultiPolygonObjectToJson_When_ReceiveAValidMultiPolygonObject()
+        {
+            // Arrange
+            MultiPolygon multiPolygon = new MultiPolygon
+            {
+                IsRoot = true,
+                Coordinates = new List<Polygon>
+                {
+                    new Polygon
+                    {
+                        Coordinates = new List<LineString>
+                        {
+                            new LineString
+                            {
+                                Coordinates = new List<Point>
+                                {
+                                    new Point
+                                    {
+                                        Coordinates = new Position
+                                        {
+                                            Longitude = 0,
+                                            Latitude = 0
+                                        }
+                                    },
+                                    new Point
+                                    {
+                                        Coordinates = new Position
+                                        {
+                                            Longitude = 123.11,
+                                            Latitude = 10,
+                                            Altitude = 987
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Act
+            string json = JsonSerializer.Serialize(multiPolygon);
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(json));
+            Assert.Equal("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0,0],[123.11,10,987]]]]}", json);
+        }
+        
+        [Fact]
+        public void Should_ConvertMultiPolygonObjectToAnInvalidGeoJson_When_ReceiveAMultiPolygonWithWrongIsRootConfigs()
+        {
+            // Arrange
+            MultiPolygon multiPolygon = new MultiPolygon
+            {
+                IsRoot = true,
+                Coordinates = new List<Polygon>
+                {
+                    new Polygon
+                    {
+                        IsRoot = true,
+                        Coordinates = new List<LineString>
+                        {
+                            new LineString
+                            {
+                                IsRoot = true,
+                                Coordinates = new List<Point>
+                                {
+                                    new Point
+                                    {
+                                        IsRoot = true,
+                                        Coordinates = new Position
+                                        {
+                                            Longitude = 0,
+                                            Latitude = 0
+                                        }
+                                    },
+                                    new Point
+                                    {
+                                        IsRoot = true,
+                                        Coordinates = new Position
+                                        {
+                                            Longitude = 123.11,
+                                            Latitude = 10,
+                                            Altitude = 987
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Act
+            string json = JsonSerializer.Serialize(multiPolygon);
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(json));
+            Assert.NotEqual("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[0,0],[123.11,10,987]]]]}", json);
+        }
+        #endregion
     }
 }

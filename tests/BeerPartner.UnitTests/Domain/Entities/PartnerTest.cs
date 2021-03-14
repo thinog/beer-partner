@@ -33,8 +33,8 @@ namespace BeerPartnerUnitTests.Domain.Entities
                                         {
                                             Coordinates = new Position
                                             {
-                                                Altitude = 0,
-                                                Longitude = 0
+                                                Longitude = 0,
+                                                Latitude = 0
                                             }
                                         }
                                     }
@@ -47,8 +47,8 @@ namespace BeerPartnerUnitTests.Domain.Entities
                 {
                     Coordinates = new Position
                     {
-                        Altitude = 0,
-                        Longitude = 0
+                        Longitude = 0,
+                        Latitude = 0
                     }
                 }
             };

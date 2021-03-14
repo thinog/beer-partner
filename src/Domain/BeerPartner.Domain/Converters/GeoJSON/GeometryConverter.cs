@@ -1,16 +1,16 @@
 using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BeerPartner.Domain.Enums;
 using BeerPartner.Domain.Interfaces.ValueObjects;
 using BeerPartner.Domain.Utils;
+using BeerPartner.Domain.ValueObjects.GeoJSON;
 
 namespace BeerPartner.Domain.Converters.GeoJSON
 {
     public class GeometryConverter<TGeometry, TCoordinates> : JsonConverter<TGeometry> where TGeometry : IGeometry<TCoordinates>, new()
     {
-
+        #region Read
         public override TGeometry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             TGeometry geometry = reader.TokenType switch
@@ -24,11 +24,6 @@ namespace BeerPartner.Domain.Converters.GeoJSON
                 throw new JsonException("Invalid JSON body.");
 
             return geometry;
-        }
-
-        public override void Write(Utf8JsonWriter writer, TGeometry value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
         }
 
         private TGeometry ReadObject(ref Utf8JsonReader reader, JsonSerializerOptions options)
@@ -55,7 +50,7 @@ namespace BeerPartner.Domain.Converters.GeoJSON
 
                 if(prop.Name.Equals(coordinatesPropertyName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(prop.Value.GetRawText(), options);
+                    geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(prop.Value.GetRawText());
                     continue;
                 }
             }
@@ -69,9 +64,37 @@ namespace BeerPartner.Domain.Converters.GeoJSON
 
             var geometry = new TGeometry();
 
-            geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(jsonDocument.RootElement.GetRawText(), options);
+            geometry.Coordinates = JsonSerializer.Deserialize<TCoordinates>(jsonDocument.RootElement.GetRawText());
 
             return geometry;
         }
+        #endregion
+
+        #region Write
+        public override void Write(Utf8JsonWriter writer, TGeometry geometry, JsonSerializerOptions options)
+        {
+            if(geometry.IsRoot)
+                WriteParent(writer, geometry, options);
+            else
+                WriteChild(writer, geometry, options);
+        }
+
+        private void WriteParent(Utf8JsonWriter writer, TGeometry geometry, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteString(geometry.GetJsonPropertyName(o => o.Type), geometry.Type.ToString());
+
+            writer.WritePropertyName(geometry.GetJsonPropertyName(o => o.Coordinates));
+            JsonSerializer.Serialize(writer, geometry.Coordinates, options);
+
+            writer.WriteEndObject();
+        }
+
+        private void WriteChild(Utf8JsonWriter writer, TGeometry geometry, JsonSerializerOptions options)
+        {
+            JsonSerializer.Serialize(writer, geometry.Coordinates, options);
+        }
+        #endregion
     }
 }

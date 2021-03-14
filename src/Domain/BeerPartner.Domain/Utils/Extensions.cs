@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
@@ -21,6 +22,11 @@ namespace BeerPartner.Domain.Utils
                 return ((JsonPropertyNameAttribute)jsonPropertyNameAttributes[0]).Name;
 
             return memberExpression.Member.Name;
+        }
+
+        public static bool IsIEnumerable(this Type type)
+        {
+            return typeof(IEnumerable).IsAssignableFrom(type);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BeerPartner.Domain.ValueObjects.GeoJSON;
@@ -20,19 +21,31 @@ namespace BeerPartner.Domain.Converters.GeoJSON
             if(!values.Any() || values.Count() < 2)
                 throw new JsonException("Invalid position.");
 
-            double longitude = values.ElementAt(0).GetDouble();
-            double latitude = values.ElementAt(1).GetDouble();
-            double? altitude = null;
-            
-            if(values.Count() > 2)
-                altitude = values.ElementAt(2).GetDouble();
+            try
+            {
+                double longitude = values.ElementAt(0).GetDouble();
+                double latitude = values.ElementAt(1).GetDouble();
+                double? altitude = null;
+                
+                if(values.Count() > 2)
+                    altitude = values.ElementAt(2).GetDouble();
 
-            return new Position(longitude, latitude, altitude);
+                return new Position(longitude, latitude, altitude);
+            } 
+            catch (InvalidOperationException)
+            {
+                throw new JsonException("Invalid position data type.");
+            }
         }
 
-        public override void Write(Utf8JsonWriter writer, Position value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Position position, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStartArray();
+            
+            foreach(double value in position)
+                JsonSerializer.Serialize(writer, value, options);
+
+            writer.WriteEndArray();
         }
     }
 }

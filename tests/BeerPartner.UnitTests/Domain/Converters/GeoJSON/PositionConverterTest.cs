@@ -1,13 +1,8 @@
 using System.Globalization;
-using System.Text;
 using System.Text.Json;
-using BeerPartner.Domain.Converters.GeoJSON;
 using BeerPartner.Domain.ValueObjects.GeoJSON;
 using Xunit;
-using Moq;
 using System.Threading;
-using System.Linq;
-using BeerPartner.Domain.Enums;
 
 namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
 {
@@ -19,6 +14,7 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
+        #region Read
         [Fact]
         public void Should_ConvertJsonToPositionObject_When_ReceiveAValidPosition()
         {
@@ -63,10 +59,10 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
         }
 
         [Fact]
-        public void Should_ThrowAnJsonException_When_ReceiveAInvalidPosition()
+        public void Should_ThrowAnJsonException_When_ReceiveAnInvalidPosition()
         {
             // Arrange
-            string json = "[\"ABC\"]";
+            string json = "[0]";
             
             // Act
             var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<Position>(json));
@@ -74,5 +70,58 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             // Assert
             Assert.Equal("Invalid position.", exception.Message);
         }
+
+        [Fact]
+        public void Should_ThrowAnJsonException_When_ReceiveAnInvalidPositionDataType()
+        {
+            // Arrange
+            string json = "[\"ABC\", \"DEF\", \"GHI\"]";
+            
+            // Act
+            var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<Position>(json));
+
+            // Assert
+            Assert.Equal("Invalid position data type.", exception.Message);
+        }
+        #endregion
+
+        #region Write
+        [Fact]
+        public void Should_ConvertPositionObjectToJson_When_ReceiveAValidPositionObject()
+        {
+            // Arrange
+            Position position = new Position
+            {
+                Longitude = 123.123,
+                Latitude = 10
+            };
+            
+            // Act
+            string json = JsonSerializer.Serialize(position);
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(json));
+            Assert.Equal("[123.123,10]", json);
+        }
+
+        [Fact]
+        public void Should_ConvertPositionObjectToJson_When_ReceiveAValidPositionObjectWithAltitude()
+        {
+            // Arrange
+            Position position = new Position
+            {
+                Longitude = 123.123,
+                Latitude = 10,
+                Altitude = 321
+            };
+            
+            // Act
+            string json = JsonSerializer.Serialize(position);
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(json));
+            Assert.Equal("[123.123,10,321]", json);
+        }
+        #endregion
     }
 }
