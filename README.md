@@ -1,5 +1,5 @@
 # Beer Partner :beers:
-Encontre o parceiro mais próximo para comprar sua cerveja *geladadinha* :snowflake:!
+Encontre o parceiro mais próximo para comprar sua cerveja *geladinha* :snowflake:!
 
 Pré-requisitos:
 - [.NET Core SDK (>= 3.1)][dotnet]
