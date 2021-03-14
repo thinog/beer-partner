@@ -30,9 +30,10 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             Point point = JsonSerializer.Deserialize<Point>(json);
 
             // Assert
+            Assert.True(point.Validate());
             Assert.True(point.IsRoot);
-            Assert.Equal(point.Coordinates.Longitude, longitude);
-            Assert.Equal(point.Coordinates.Latitude, latitude);
+            Assert.Equal(longitude, point.Coordinates.Longitude);
+            Assert.Equal(latitude, point.Coordinates.Latitude);
         }
 
         [Fact]
@@ -46,7 +47,7 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             Point point = JsonSerializer.Deserialize<Point>(json);
 
             // Assert
-            Assert.Equal(point.Coordinates.Altitude, altitude);
+            Assert.Equal(altitude, point.Coordinates.Altitude);
         }
 
         [Fact]
@@ -68,6 +69,7 @@ namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
             MultiPolygon multiPolygon = JsonSerializer.Deserialize<MultiPolygon>(json);
 
             // Assert
+            Assert.True(multiPolygon.Validate());
             Assert.True(multiPolygon.IsRoot);
             Assert.Equal(GeometryType.MultiPolygon, multiPolygon.Type);
 
