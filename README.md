@@ -52,6 +52,8 @@ Destruir stack na AWS:
 - [ ] Montar scripts de criação da stack na AWS, deploy e destruição da stack
 - [x] Criar implementação de GeoJSON
 - [ ] Testes unitários
+- [ ] Logs no CloudWatch
+- [ ] Provisionar CLIs (dotnet, aws, sam) por container, para não precisar instalar tudo na máquina
 - [ ] (Opcional) Container de SonarQube local para analisar código
 
 

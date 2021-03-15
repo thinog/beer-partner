@@ -12,4 +12,9 @@
     <PackageReference Include="Amazon.Lambda.Core" Version="1.2.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.1.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Application\BeerPartner.Application\BeerPartner.Application.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructure\BeerPartner.Infrastructure.IoC\BeerPartner.Infrastructure.IoC.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructure\BeerPartner.Infrastructure\BeerPartner.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

@@ -114,7 +114,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref ApiGatewayBeerPartner
-            Path: /partner/search/{latitude}/{longitude}
+            Path: /partner/search/{longitude}/{latitude}
             Method: GET
 
 Outputs:

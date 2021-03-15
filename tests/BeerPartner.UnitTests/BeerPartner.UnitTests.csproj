@@ -26,6 +26,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Domain\BeerPartner.Domain\BeerPartner.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Application\BeerPartner.Application\BeerPartner.Application.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\BeerPartner.Infrastructure.IoC\BeerPartner.Infrastructure.IoC.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\BeerPartner.Infrastructure\BeerPartner.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
