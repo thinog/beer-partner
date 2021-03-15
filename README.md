@@ -23,7 +23,7 @@ Criar a stack na AWS e fazer deploy da aplicação:
 ./deploy-stack.sh
 ```
 
-Apenas realizar deploy da aplicação (precisa já ter criado a stack pelo comando acima):
+Apenas realizar deploy da aplicação, caso realize alterações após subir a stack (precisa já ter criado a stack pelo comando acima):
 ```bash
 ./publish-app.sh
 ```
