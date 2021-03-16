@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using BeerPartner.Application.Interfaces.Repositories;
 using BeerPartner.Application.UseCases.CreatePartner;
+using BeerPartner.Infrastructure.IoC;
 using BeerPartner.Infrastructure.Utils;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -14,15 +13,21 @@ using BeerPartner.Infrastructure.Utils;
 
 namespace BeerPartner.Lambda.Partner.Create
 {
-    public class Function : IOutputPort
+    public class Function : BaseLambda, IOutputPort
     {
         private APIGatewayProxyResponse _response;
         private ICreatePartnerUseCase _useCase;
 
-        public Function()
+        protected override void Setup(ILambdaContext context)
         {
-            _useCase = new CreatePartnerUseCase(null);
+            base.Setup(context);
+
+            var partnerRepository = (IPartnerRepository)ServiceProvider.GetService(typeof(IPartnerRepository));
+            
+            _useCase = new CreatePartnerUseCase(partnerRepository, Logger);
             _useCase.SetOutputPort(this);
+
+            Logger.Info("Lambda setup done.");
         }
 
         /// <summary>
@@ -35,15 +40,19 @@ namespace BeerPartner.Lambda.Partner.Create
         {
             try
             {
+                Setup(context);
+
                 var partner = JsonSerializer.Deserialize<CreatePartnerRequest>(request.Body);
                 _useCase.Execute(partner);
             }
             catch (JsonException exception)
             {
-                Error(exception.Message);
+                Logger.Error(exception.Message, exception);
+                Invalid(exception.Message);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                Logger?.Error(exception.Message, exception);
                 Error("An unexpected error has occured.");
             }
 
@@ -51,17 +60,20 @@ namespace BeerPartner.Lambda.Partner.Create
         }
 
         public void Ok(Guid id)
-        {      
+        {   
+            Logger.Info($"Partner created with id {id}");
             _response = LambdaUtils.CreateResponse(new { id }, HttpStatusCode.OK);
         }
 
         public void Error(string error)
         {
+            Logger.Error(error);
             _response = LambdaUtils.CreateResponse(null, HttpStatusCode.InternalServerError, false, error);
         }
 
         public void Invalid(string error)
         {
+            Logger.Error($"Invalid request: {error}");
             _response = LambdaUtils.CreateResponse(null, HttpStatusCode.BadRequest, false, error);
         }
     }

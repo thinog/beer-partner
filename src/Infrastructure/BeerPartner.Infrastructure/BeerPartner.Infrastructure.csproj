@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\BeerPartner.Domain\BeerPartner.Domain.csproj" />
+    <ProjectReference Include="..\..\Application\BeerPartner.Application\BeerPartner.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

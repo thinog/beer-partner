@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 using BeerPartner.Domain.Enums;
 using BeerPartner.Domain.Interfaces.ValueObjects;
 using BeerPartner.Domain.Utils;
-using BeerPartner.Domain.ValueObjects.GeoJSON;
 
 namespace BeerPartner.Domain.Converters.GeoJSON
 {

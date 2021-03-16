@@ -2,7 +2,9 @@ using System;
 using System.Net;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using BeerPartner.Application.Interfaces.Repositories;
 using BeerPartner.Application.UseCases.GetPartner;
+using BeerPartner.Infrastructure.IoC;
 using BeerPartner.Infrastructure.Utils;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -10,15 +12,21 @@ using BeerPartner.Infrastructure.Utils;
 
 namespace BeerPartner.Lambda.Partner.Get
 {
-    public class Function : IOutputPort
+    public class Function : BaseLambda, IOutputPort
     {
         private APIGatewayProxyResponse _response;
         private IGetPartnerUseCase _useCase;
 
-        public Function()
+        protected override void Setup(ILambdaContext context)
         {
-            _useCase = new GetPartnerUseCase(null);
+            base.Setup(context);
+
+            var partnerRepository = (IPartnerRepository)ServiceProvider.GetService(typeof(IPartnerRepository));
+
+            _useCase = new GetPartnerUseCase(partnerRepository, Logger);
             _useCase.SetOutputPort(this);
+
+            Logger.Info("Lambda setup done.");
         }
 
         /// <summary>
@@ -31,6 +39,8 @@ namespace BeerPartner.Lambda.Partner.Get
         {
             try
             {
+                Setup(context);
+
                 if(request.PathParameters != null && request.PathParameters.ContainsKey("id"))
                 {
                     string id = request.PathParameters["id"];
@@ -50,8 +60,9 @@ namespace BeerPartner.Lambda.Partner.Get
                 }
                 
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                Logger?.Error(exception.Message, exception);
                 Error("An unexpected error has occured.");
             }
 
@@ -60,21 +71,25 @@ namespace BeerPartner.Lambda.Partner.Get
 
         public void Ok(GetPartnerResponse partner)
         {      
+            Logger.Info("Partner found", partner);
             _response = LambdaUtils.CreateResponse(partner, HttpStatusCode.OK);
         }
 
         public void Error(string error)
         {
+            Logger.Error(error);
             _response = LambdaUtils.CreateResponse(null, HttpStatusCode.InternalServerError, false, error);
         }
 
         public void Invalid(string error)
         {
+            Logger.Error($"Invalid request: {error}");
             _response = LambdaUtils.CreateResponse(null, HttpStatusCode.BadRequest, false, error);
         }
 
         public void NotFound()
         {
+            Logger.Info($"Partner not found");
             _response = LambdaUtils.CreateResponse(null, HttpStatusCode.NotFound, false, "Partner not found.");
         }
     }

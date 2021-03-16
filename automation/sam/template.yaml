@@ -14,6 +14,10 @@ Globals:
     Runtime: dotnetcore3.1
     MemorySize: 128
     Timeout: 30
+    AutoPublishAlias: !Ref Stage
+    Environment:
+      Variables:
+        env: !Ref Stage
 
 Resources:
   DynamoBeerPartnerTable:

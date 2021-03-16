@@ -1,6 +1,7 @@
 using System;
+using BeerPartner.Application.Interfaces;
+using BeerPartner.Application.Interfaces.Repositories;
 using BeerPartner.Domain.Entities;
-using BeerPartner.Domain.Interfaces.Repositories;
 
 namespace BeerPartner.Application.UseCases.CreatePartner
 {
@@ -8,11 +9,13 @@ namespace BeerPartner.Application.UseCases.CreatePartner
     {
         private IPartnerRepository _repository;
         private IOutputPort _outputPort;
+        private ILogger _logger;
 
-        public CreatePartnerUseCase(IPartnerRepository repository)
+        public CreatePartnerUseCase(IPartnerRepository repository, ILogger logger)
         {
             _repository = repository;
             _outputPort = new DefaultOutputPort();
+            _logger = logger;
         }
 
         public void SetOutputPort(IOutputPort outputPort) => _outputPort = outputPort;
@@ -28,6 +31,8 @@ namespace BeerPartner.Application.UseCases.CreatePartner
                     _outputPort.Invalid("Invalid body.");
                     return;
                 }
+
+                _logger.Info($"Inserting partner...");
 
                 partner.Id = _repository.Insert(partner);
                 

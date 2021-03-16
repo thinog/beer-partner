@@ -4,7 +4,7 @@ using BeerPartner.Domain.ValueObjects.GeoJSON;
 using Xunit;
 using System.Threading;
 
-namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
+namespace BeerPartner.UnitTests.Domain.Converters.GeoJSON
 {
     public class PositionConverterTest
     {

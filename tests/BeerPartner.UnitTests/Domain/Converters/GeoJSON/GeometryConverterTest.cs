@@ -9,7 +9,7 @@ using System.Linq;
 using BeerPartner.Domain.Enums;
 using System.Collections.Generic;
 
-namespace BeerPartnerUnitTests.Domain.Converters.GeoJSON
+namespace BeerPartner.UnitTests.Domain.Converters.GeoJSON
 {
     public class GeometryConverterTest
     {

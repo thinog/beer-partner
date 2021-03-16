@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\..\Infrastructure\BeerPartner.Infrastructure.IoC\BeerPartner.Infrastructure.IoC.csproj" />
     <ProjectReference Include="..\..\..\Infrastructure\BeerPartner.Infrastructure\BeerPartner.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.dev.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="appsettings.prd.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
