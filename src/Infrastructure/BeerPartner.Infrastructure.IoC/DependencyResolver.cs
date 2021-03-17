@@ -2,13 +2,13 @@ using Microsoft.Extensions.DependencyInjection;
 using BeerPartner.Domain.Interfaces.Repositories.Context;
 using BeerPartner.Infrastructure.Repositories;
 using BeerPartner.Infrastructure.Repositories.Context;
-using Amazon.DynamoDBv2.DataModel;
 using BeerPartner.Application.UseCases.CreatePartner;
 using BeerPartner.Application.UseCases.GetPartner;
 using BeerPartner.Application.Interfaces.Repositories;
 using System;
 using BeerPartner.Application;
 using BeerPartner.Application.Interfaces;
+using MongoDB.Driver;
 
 namespace BeerPartner.Infrastructure.IoC
 {
@@ -24,7 +24,7 @@ namespace BeerPartner.Infrastructure.IoC
 
         private static IServiceCollection Configure(IServiceCollection service, IResolverConfiguration configuration)
         {
-            service.AddTransient(typeof(IDbContext<IDynamoDBContext>), configuration?.DbContext ?? typeof(DynamoContext));
+            service.AddTransient(typeof(IDbContext<IMongoClient>), configuration?.DbContext ?? typeof(MongoContext));
             service.AddScoped(typeof(IPartnerRepository), configuration?.PartnerRepository ?? typeof(PartnerRepository));
 
             service.AddScoped(typeof(ICreatePartnerUseCase), configuration?.CreatePartnerUseCase ?? typeof(CreatePartnerUseCase));

@@ -1,7 +1,7 @@
-using Amazon.DynamoDBv2.DataModel;
 using BeerPartner.Domain.Interfaces.Repositories.Context;
 using BeerPartner.Infrastructure.IoC;
 using BeerPartner.UnitTests.Infrastructure.Repositories;
+using MongoDB.Driver;
 using Xunit;
 
 namespace BeerPartner.UnitTests.Infrastructure.IoC
@@ -13,14 +13,14 @@ namespace BeerPartner.UnitTests.Infrastructure.IoC
         {
             // Arrange
             var configuration = new ResolverConfigurationFaker();
-            configuration.DbContext = typeof(DynamoContextFaker);
+            configuration.DbContext = typeof(MongoContextFaker);
                        
             // Act
             var service = DependencyResolver.Resolve(configuration);
-            var dbContext = (IDbContext<IDynamoDBContext>)service.GetService(typeof(IDbContext<IDynamoDBContext>));
+            var dbContext = (IDbContext<IMongoClient>)service.GetService(typeof(IDbContext<IMongoClient>));
 
             // Act - Assert
-            Assert.Equal(DynamoContextFaker.ConnectionToStringMessage, dbContext.Connection.ToString());
+            Assert.Equal(MongoContextFaker.ConnectionToStringMessage, dbContext.Connection.ToString());
         }
     }
 }

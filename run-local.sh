@@ -14,20 +14,16 @@ fi
 
 current_dir=`pwd`
 
-docker-compose --file automation/docker/dynamodb-local.yaml up --detach
+docker-compose --file automation/docker/mongodb-local.yaml up --detach
 
 function terminate() {
     docker ps -a | awk '{ print $1,$2 }' | grep aws-sam-cli-emulation-image-dotnetcore3.1 | awk '{print $1 }' | xargs -I {} docker rm {} -f
-    cd $current_dir; docker-compose --file automation/docker/dynamodb-local.yaml down
+    cd $current_dir; docker-compose --file automation/docker/mongodb-local.yaml down
 }
 
 trap terminate INT
 
-sleep 1s
-
-aws dynamodb create-table --cli-input-json file://dynamodb-local-configs.json --endpoint-url http://localhost:8000 > /dev/null
-
 cd automation/sam
 
 $sam build && \
-$sam local start-api --port 8080 --host localhost --warm-containers EAGER --docker-network dynamodb
+$sam local start-api --port 8080 --host localhost --warm-containers EAGER --docker-network mongodb
