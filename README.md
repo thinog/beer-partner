@@ -29,7 +29,7 @@ Destruir stack na AWS:
 ./destroy-stack.sh
 ```
 
-Para testar as URLs localmente, disponibilizei uma collection do Insomnia [aqui][insomnia_collection]. Porém, caso prefira testar via cURL, as URLs locais são as seguintes:
+Para testar as URLs localmente, disponibilizei uma collection do [Insomnia][insomnia] em "./src/automation/insomnia_collection/insomnia_beer_partner.json". Porém, caso prefira testar via cURL, as URLs locais são as seguintes:
 
 - POST http://localhost:8080/partner
 - GET http://localhost:8080/partner/{guid}
@@ -70,4 +70,4 @@ Já as URLs da AWS, são impressas no shell ao final da execução do script ./d
 [aws-cli]: https://aws.amazon.com/cli/
 [aws-sam]: https://aws.amazon.com/pt/serverless/sam/
 [aws-cli-configuration]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-methods
-[insomnia_collection]: src/automation/insomnia_collection/insomnia_beer_partner.json
+[insomnia]: https://insomnia.rest
