@@ -2,6 +2,7 @@
 Encontre o parceiro mais próximo para comprar sua cerveja *geladinha* :snowflake:!
 
 Pré-requisitos:
+- [Git Bash][git_bash] (apenas se o SO for Windows)
 - [.NET Core SDK (>= 3.1)][dotnet]
 - [Docker][docker]
 - [AWS CLI][aws-cli] (instalado e com perfil default [configurado][aws-cli-configuration])
@@ -23,15 +24,18 @@ Criar a stack na AWS e fazer deploy da aplicação:
 ./deploy-stack.sh
 ```
 
-Apenas realizar deploy da aplicação, caso realize alterações após subir a stack (precisa já ter criado a stack pelo comando acima):
-```bash
-./publish-app.sh
-```
-
 Destruir stack na AWS:
 ```bash
 ./destroy-stack.sh
 ```
+
+Para testar as URLs localmente, disponibilizei uma collection do Insomnia [aqui][insomnia_collection]. Porém, caso prefira testar via cURL, as URLs locais são as seguintes:
+
+- POST http://localhost:8080/partner
+- GET http://localhost:8080/partner/{guid}
+- GET http://localhost:8080/partner/search/{longitude}/{latitude}
+
+Já as URLs da AWS, são impressas no shell ao final da execução do script ./deploy-stack.sh.
 
 ## Arquitetura da aplicação na AWS:
 ![Arquitetura AWS](./assets/beer-partner-aws.png "Arquitetura AWS")
@@ -49,16 +53,21 @@ Destruir stack na AWS:
 - [ ] Montar collection do Postman para testar endpoints
 - [ ] Cross-plataform (testar local no Windows e no Linux)
 - [x] ~~Criar stack na AWS através de CloudFormation~~ Criar stack na AWS com SAM
-- [ ] Montar scripts de criação da stack na AWS, deploy e destruição da stack
+- [x] Montar scripts de criação da stack na AWS, deploy e destruição da stack
 - [x] Criar implementação de GeoJSON
-- [ ] Testes unitários
-- [ ] Logs no CloudWatch
+- [x] Testes unitários
+- [x] Logs no CloudWatch
 - [ ] Provisionar CLIs (dotnet, aws, sam) por container, para não precisar instalar tudo na máquina
-- [ ] (Opcional) Container de SonarQube local para analisar código
+- [x] Criar Json Custom Converter para GeoJSON
+- [x] Completar API de create
+- [x] Completar API de get by id
+- [ ] Completar API de search by coordinates
 
 
+[git_bash]: https://gitforwindows.org
 [dotnet]: https://dotnet.microsoft.com/download
 [docker]: https://www.docker.com
 [aws-cli]: https://aws.amazon.com/cli/
 [aws-sam]: https://aws.amazon.com/pt/serverless/sam/
 [aws-cli-configuration]: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html#cli-configure-files-methods
+[insomnia_collection]: src/automation/insomnia_collection/insomnia_beer_partner.json
