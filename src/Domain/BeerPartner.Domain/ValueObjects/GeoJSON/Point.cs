@@ -9,6 +9,8 @@ namespace BeerPartner.Domain.ValueObjects.GeoJSON
     // https://tools.ietf.org/html/rfc7946#section-3.1.2
     public class Point : IGeometry<Position>
     {
+        public Point() { }
+
         [JsonPropertyName("type")]
         public GeometryType Type => GeometryType.Point;
         

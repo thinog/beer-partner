@@ -16,7 +16,14 @@ current_dir=`pwd`
 
 docker-compose --file automation/docker/dynamodb-local.yaml up --detach
 
-trap 'cd $current_dir; docker-compose --file automation/docker/dynamodb-local.yaml down' INT
+function terminate() {
+    docker ps -a | awk '{ print $1,$2 }' | grep aws-sam-cli-emulation-image-dotnetcore3.1 | awk '{print $1 }' | xargs -I {} docker rm {} -f
+    cd $current_dir; docker-compose --file automation/docker/dynamodb-local.yaml down
+}
+
+trap terminate INT
+
+sleep 1s
 
 aws dynamodb create-table --cli-input-json file://dynamodb-local-configs.json --endpoint-url http://localhost:8000 > /dev/null
 

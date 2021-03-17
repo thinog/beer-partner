@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using BeerPartner.Domain.Interfaces.Repositories.Context;
+using BeerPartner.Infrastructure.Repositories;
 using BeerPartner.Infrastructure.Repositories.Context;
-using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using BeerPartner.Application.UseCases.CreatePartner;
 using BeerPartner.Application.UseCases.GetPartner;
 using BeerPartner.Application.Interfaces.Repositories;
@@ -13,23 +14,23 @@ namespace BeerPartner.Infrastructure.IoC
 {
     public static class DependencyResolver
     {
-        public static IServiceProvider Resolve()
+        public static IServiceProvider Resolve(IResolverConfiguration configuration = null)
         {
             var service = new ServiceCollection();
 
-            return Configure(service)
+            return Configure(service, configuration)
                 .BuildServiceProvider();
         }
 
-        private static IServiceCollection Configure(IServiceCollection service)
+        private static IServiceCollection Configure(IServiceCollection service, IResolverConfiguration configuration)
         {
-            service.AddTransient<IDbContext<IAmazonDynamoDB>, DynamoContext>();
-            service.AddScoped<IPartnerRepository, PartnerRepository>();
+            service.AddTransient(typeof(IDbContext<IDynamoDBContext>), configuration?.DbContext ?? typeof(DynamoContext));
+            service.AddScoped(typeof(IPartnerRepository), configuration?.PartnerRepository ?? typeof(PartnerRepository));
 
-            service.AddScoped<ICreatePartnerUseCase, CreatePartnerUseCase>();
-            service.AddScoped<IGetPartnerUseCase, GetPartnerUseCase>();
+            service.AddScoped(typeof(ICreatePartnerUseCase), configuration?.CreatePartnerUseCase ?? typeof(CreatePartnerUseCase));
+            service.AddScoped(typeof(IGetPartnerUseCase), configuration?.GetPartnerUseCase ?? typeof(GetPartnerUseCase));
 
-            service.AddSingleton<ILogger, Logger>();
+            service.AddSingleton(typeof(ILogger), configuration?.Logger ?? typeof(Logger));
 
             return service;
         }

@@ -1,12 +1,13 @@
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using BeerPartner.Domain.Interfaces.Repositories.Context;
 using BeerPartner.Domain.Utils;
 
 namespace BeerPartner.Infrastructure.Repositories.Context
 {
-    public class DynamoContext : IDbContext<IAmazonDynamoDB>
+    public class DynamoContext : IDbContext<IDynamoDBContext>
     {
-        public IAmazonDynamoDB Connection { get; }
+        public IDynamoDBContext Connection { get; }
 
         public DynamoContext()
         {
@@ -17,7 +18,9 @@ namespace BeerPartner.Infrastructure.Repositories.Context
             if(!string.IsNullOrWhiteSpace(host))
                 config.ServiceURL = host;
 
-            Connection = new AmazonDynamoDBClient(config);
+            var client = new AmazonDynamoDBClient(config);
+
+            Connection = new DynamoDBContext(client);
         }
 
     }

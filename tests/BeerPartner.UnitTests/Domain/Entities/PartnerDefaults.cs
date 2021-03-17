@@ -49,7 +49,6 @@ namespace BeerPartner.UnitTests.Domain.Entities
 
         internal static Partner InvalidPartner => new Partner 
             {
-                Id = Guid.NewGuid(),
                 TradingName = "Adega do Zé",
                 OwnerName = "",
                 CoverageArea = new MultiPolygon(),

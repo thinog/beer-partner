@@ -5,6 +5,6 @@
       { "AttributeName": "Id", "KeyType": "HASH" }
     ],
     "AttributeDefinitions": [
-      { "AttributeName": "Id", "AttributeType": "N" }
+      { "AttributeName": "Id", "AttributeType": "S" }
     ]
 }

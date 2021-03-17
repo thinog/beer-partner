@@ -7,15 +7,17 @@ using BeerPartner.Domain.Interfaces.ValueObjects;
 
 namespace BeerPartner.Domain.ValueObjects.GeoJSON
 {
-    [JsonConverter(typeof(GeometryConverter<LineString, IEnumerable<Point>>))]
+    [JsonConverter(typeof(GeometryConverter<LineString, List<Point>>))]
     // https://tools.ietf.org/html/rfc7946#section-3.1.4
-    public class LineString : IGeometry<IEnumerable<Point>>
+    public class LineString : IGeometry<List<Point>>
     {
+        public LineString() { }
+
         [JsonPropertyName("type")]
         public GeometryType Type => GeometryType.LineString;
         
         [JsonPropertyName("coordinates")]
-        public IEnumerable<Point> Coordinates { get; set; }
+        public List<Point> Coordinates { get; set; }
 
         [JsonIgnore]
         public bool IsRoot { get; set; }

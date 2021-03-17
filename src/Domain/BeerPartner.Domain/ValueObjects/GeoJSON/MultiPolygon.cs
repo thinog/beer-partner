@@ -7,15 +7,17 @@ using BeerPartner.Domain.Interfaces.ValueObjects;
 
 namespace BeerPartner.Domain.ValueObjects.GeoJSON
 {
-    [JsonConverter(typeof(GeometryConverter<MultiPolygon, IEnumerable<Polygon>>))]
+    [JsonConverter(typeof(GeometryConverter<MultiPolygon, List<Polygon>>))]
     // https://tools.ietf.org/html/rfc7946#section-3.1.7
-    public class MultiPolygon : IGeometry<IEnumerable<Polygon>>
+    public class MultiPolygon : IGeometry<List<Polygon>>
     {
+        public MultiPolygon() { }
+
         [JsonPropertyName("type")]
         public GeometryType Type => GeometryType.MultiPolygon;
         
         [JsonPropertyName("coordinates")]
-        public IEnumerable<Polygon> Coordinates { get; set; }
+        public List<Polygon> Coordinates { get; set; }
 
         [JsonIgnore]
         public bool IsRoot { get; set; }
