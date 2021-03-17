@@ -44,10 +44,14 @@ Já as URLs da AWS, são impressas no shell ao final da execução do script ./d
 ![Arquitetura local](./assets/beer-partner-local.png "Arquitetura local")
 
 ## Checklist de aplicação
+- [x] Completar API de create
+- [x] Completar API de get by id
+- [ ] Completar API de search by coordinates
+- [x] Criar Json Custom Converter para GeoJSON
 - [x] Aplicação feita para rodar na AWS
 - [x] Microserviços feitos para rodarem como AWS Lambda
 - [x] API REST através de AWS API Gateway
-- [ ] Banco de dados DynamoDB (rodar em container para não depender da stack criada na AWS)
+- [x] Banco de dados DynamoDB (rodar em container para não depender da stack criada na AWS)
 - [x] Rodar API local com SAM
 - [ ] Documentar endpoints com Swagger
 - [ ] Montar collection do Postman para testar endpoints
@@ -58,10 +62,6 @@ Já as URLs da AWS, são impressas no shell ao final da execução do script ./d
 - [x] Testes unitários
 - [x] Logs no CloudWatch
 - [ ] Provisionar CLIs (dotnet, aws, sam) por container, para não precisar instalar tudo na máquina
-- [x] Criar Json Custom Converter para GeoJSON
-- [x] Completar API de create
-- [x] Completar API de get by id
-- [ ] Completar API de search by coordinates
 
 
 [git_bash]: https://gitforwindows.org
