@@ -8,12 +8,10 @@ Pré-requisitos:
 - [AWS CLI][aws-cli] (instalado e com perfil default [configurado][aws-cli-configuration])
 - [AWS SAM (Serverless Application Model)][aws-sam]
 
-<!--
-Para rodar o container de desenvolvimento, basta executar o comando abaixo:
+**Ou**, para rodar o container de desenvolvimento, basta executar o comando abaixo:
 ```bash
 ./run-dev-env.sh
 ```
--->
 
 :warning: **Atenção:** caso esteja utilizando Windows, os comandos devem ser executado via Git Bash.
 
@@ -72,7 +70,7 @@ Já as URLs da AWS, são impressas no shell ao final da execução do script ./d
 - [x] Criar implementação de GeoJSON
 - [x] Testes unitários
 - [x] Logs no CloudWatch
-- [ ] Provisionar CLIs (dotnet, aws, sam) por container, para não precisar instalar tudo na máquina
+- [x] Provisionar CLIs (dotnet, aws, sam) por container, para não precisar instalar tudo na máquina
 
 
 [git_bash]: https://gitforwindows.org
