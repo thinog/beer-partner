@@ -2,11 +2,22 @@
 Encontre o parceiro mais próximo para comprar sua cerveja *geladinha* :snowflake:!
 
 Pré-requisitos:
-- [Git Bash][git_bash] (apenas se o SO for Windows)
-- [.NET Core SDK (>= 3.1)][dotnet]
+- [Git Bash][git_bash] (apenas Windows)
 - [Docker][docker]
+- [.NET Core SDK (>= 3.1)][dotnet]
 - [AWS CLI][aws-cli] (instalado e com perfil default [configurado][aws-cli-configuration])
 - [AWS SAM (Serverless Application Model)][aws-sam]
+
+<!--
+Para rodar o container de desenvolvimento, basta executar o comando abaixo:
+```bash
+./run-dev-env.sh
+```
+-->
+
+:warning: **Atenção:** caso esteja utilizando Windows, os comandos devem ser executado via Git Bash.
+
+
 
 ## Comandos
 Executar testes unitários e verificar coverage:

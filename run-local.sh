@@ -25,9 +25,17 @@ trap terminate INT
 
 sleep 1s
 
-aws dynamodb create-table --cli-input-json file://dynamodb-local-configs.json --endpoint-url http://localhost:8000 > /dev/null
+dynamodb_endpoint="http://localhost:8000"
+
+if [[ $DEV_ENV == true ]]
+then
+    docker network connect docker_dynamodb beer-partner-dev-env
+    dynamodb_endpoint="http://dynamodb:8000"
+fi
+
+aws dynamodb create-table --cli-input-json file://dynamodb-local-configs.json --endpoint-url $dynamodb_endpoint > /dev/null
 
 cd automation/sam
 
 $sam build && \
-$sam local start-api --port 8080 --host localhost --warm-containers EAGER --docker-network dynamodb
+$sam local start-api --port 8080 --host localhost --warm-containers EAGER --docker-network docker_dynamodb
