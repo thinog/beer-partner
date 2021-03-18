@@ -12,10 +12,7 @@ then
     aws_files="/$aws_files"
 fi
 
-docker build -t $image_name - < automation/docker/dev-env.dockerfile
-
-echo $sock
-
+docker build -t $image_name - < automation/docker/dev-env.dockerfile && \
 
 docker run -it --rm \
     -v $sock \

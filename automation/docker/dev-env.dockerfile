@@ -2,7 +2,7 @@ FROM bitnami/minideb:latest
 
 # general
 RUN apt-get update && \
-    apt-get install curl gnupg unzip software-properties-common ca-certificates apt-transport-https -y && \
+    apt-get install curl gnupg zip unzip software-properties-common ca-certificates apt-transport-https -y && \
     apt-get update
 
 # aws-cli
@@ -26,7 +26,8 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
 RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     echo "deb https://packages.microsoft.com/debian/10/prod buster main" > /etc/apt/sources.list.d/microsoft-packages.list && \
     apt-get update && \
-    apt-get install dotnet-sdk-3.1 -y 
-    # dotnet tool install -g amazon.lambda.tools
+    apt-get install dotnet-sdk-3.1 -y
+
+ENV PATH "$PATH:/root/.dotnet/tools/"
 
 WORKDIR /var/opt
